@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* optional: a soft background + default text */
+body {
+  /* Tailwind utilities work inside plain CSS in v4 */
+  --tw-gradient-from: #e0f2fe; /* sky-100 */
+  --tw-gradient-to: #ffe4e6;   /* rose-100 */
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-from), white, var(--tw-gradient-to));
+  color: rgb(30 41 59); /* slate-800 */
+}
