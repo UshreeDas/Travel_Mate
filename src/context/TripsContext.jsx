@@ -1,29 +1,32 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { seedTrips } from "../data/trips.js";
 
 const STORAGE_KEY = "travelmate.trips.v1";
 const TripsCtx = createContext(null);
 
 export function TripsProvider({ children }) {
+  // Load from localStorage or start empty
   const [trips, setTrips] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : null;
-      if (Array.isArray(parsed) && parsed.length) return parsed;
-    } catch {}
-    return seedTrips; // first load gets seed data
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
   });
 
+  // Persist on every change
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(trips));
     } catch {}
   }, [trips]);
 
-  const reset = () => setTrips(seedTrips);
+  const addTrip = (trip) => setTrips((prev) => [...prev, trip]);
+  const removeTrip = (id) => setTrips((prev) => prev.filter((t) => t.id !== id));
 
   return (
-    <TripsCtx.Provider value={{ trips, setTrips, reset }}>
+    <TripsCtx.Provider value={{ trips, addTrip, removeTrip, setTrips }}>
       {children}
     </TripsCtx.Provider>
   );

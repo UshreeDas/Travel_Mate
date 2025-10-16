@@ -7,7 +7,7 @@ const FALLBACK_IMG =
 
 export default function AddTrip() {
   const nav = useNavigate();
-  const { setTrips } = useTrips();
+  const { addTrip } = useTrips();
   const [form, setForm] = useState({
     title: "",
     destination: "",
@@ -22,12 +22,11 @@ export default function AddTrip() {
   const onSubmit = (e) => {
     e.preventDefault();
     if (!form.title || !form.destination || !form.startDate || !form.endDate) return;
-    const newTrip = {
+    addTrip({
       id: crypto.randomUUID(),
       ...form,
       cover: form.cover?.trim() || FALLBACK_IMG,
-    };
-    setTrips((prev) => [...prev, newTrip]); // persist via context -> localStorage
+    });
     nav("/trips");
   };
 

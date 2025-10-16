@@ -2,9 +2,10 @@ import { useMemo, useState } from "react";
 import TripCard from "../components/TripCard.jsx";
 import FilterBar from "../components/FilterBar.jsx";
 import { useTrips } from "../context/TripsContext.jsx";
+import { Link } from "react-router-dom";
 
 export default function TripsList() {
-  const { trips } = useTrips();
+  const { trips, removeTrip } = useTrips();
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("start");
 
@@ -26,15 +27,28 @@ export default function TripsList() {
   return (
     <section className="space-y-4">
       <h1 className="text-2xl font-bold">Your Trips</h1>
-      <FilterBar query={query} setQuery={setQuery} sortKey={sortKey} setSortKey={setSortKey} />
+
+      {trips.length > 0 && (
+        <FilterBar
+          query={query} setQuery={setQuery}
+          sortKey={sortKey} setSortKey={setSortKey}
+        />
+      )}
+
       {visible.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-slate-600">
-          No trips found. Try clearing filters or add a new trip.
+          <p className="mb-3">No trips yet. Start by adding your first one.</p>
+          <Link
+            to="/add"
+            className="inline-block rounded-xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800"
+          >
+            Add a Trip
+          </Link>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((t) => (
-            <TripCard key={t.id} {...t} />
+            <TripCard key={t.id} {...t} onDelete={removeTrip} />
           ))}
         </div>
       )}
